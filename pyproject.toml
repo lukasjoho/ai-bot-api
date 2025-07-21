@@ -3,12 +3,13 @@ name = "ai-bot-api"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.13"
 dependencies = [
     "fastapi",
     "uvicorn",
     "requests",
     "python-dotenv",
     "openai",
-    "supabase"
+    "supabase",
+    "openai-agents>=0.2.2",
 ]

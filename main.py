@@ -10,6 +10,7 @@ app.include_router(whatsapp_router)
 
 @app.get("/")
 def read_root():
+    print("Root endpoint hit")
     return {"message": "WhatsApp bot API running..."}
 
 

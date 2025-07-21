@@ -1,0 +1,74 @@
+[
+  {
+    "id": "product_001",
+    "imageUrl": "https://d23dsm0lnesl7r.cloudfront.net/media/bc/46/92/1744020374/bb-klp-2023-adult-active-800px.jpg?ts=1744025729",
+    "title": "Dog Box BELCANDO Adult Active",
+    "price": "4,99€"
+  },
+  {
+    "id": "product_002",
+    "imageUrl": "https://d23dsm0lnesl7r.cloudfront.net/media/82/bb/e4/1744020390/bb-klp-2023-adult-dinner-800px.jpg?ts=1744025739",
+    "title": "Dog Box BELCANDO Adult Dinner",
+    "price": "4,99€"
+  },
+  {
+    "id": "product_003",
+    "imageUrl": "https://d23dsm0lnesl7r.cloudfront.net/media/86/19/e9/1744020464/bb-klp-2023-adult-iberico-rice-800px.jpg?ts=1744025795",
+    "title": "Dog Box BELCANDO Adult Iberico & Rice",
+    "price": "4,99€"
+  },
+  {
+    "id": "product_004",
+    "imageUrl": "https://d23dsm0lnesl7r.cloudfront.net/media/b7/08/4a/1744020482/bb-klp-2023-adult-lamb-rice-800px.jpg?ts=1744025806",
+    "title": "Dog Box BELCANDO Adult Lamb & Rice",
+    "price": "4,99€"
+  },
+  {
+    "id": "product_005",
+    "imageUrl": "https://d23dsm0lnesl7r.cloudfront.net/media/7a/9d/f6/1744020495/bb-klp-2023-adult-light-800px.jpg?ts=1744025824",
+    "title": "Dog Box BELCANDO Adult Light",
+    "price": "4,99€"
+  },
+  {
+    "id": "product_006",
+    "imageUrl": "https://d23dsm0lnesl7r.cloudfront.net/media/31/f1/a6/1744020511/bb-klp-2023-adult-multi-croc-800px.jpg?ts=1744025830",
+    "title": "Dog Box BELCANDO Adult Multi-Croc",
+    "price": "4,99€"
+  },
+  {
+    "id": "product_007",
+    "imageUrl": "https://d23dsm0lnesl7r.cloudfront.net/media/d5/9c/e2/1744020553/bb-klp-2023-junior-800px.jpg?ts=1744025847",
+    "title": "Dog Box BELCANDO Junior",
+    "price": "4,99€"
+  },
+  {
+    "id": "product_008",
+    "imageUrl": "https://d23dsm0lnesl7r.cloudfront.net/media/e8/47/b1/1744020570/bb-klp-2023-junior-lamb-rice-800px.jpg?ts=1744025853",
+    "title": "Dog Box BELCANDO Junior Lamb & Rice",
+    "price": "4,99€"
+  },
+  {
+    "id": "product_009",
+    "imageUrl": "https://d23dsm0lnesl7r.cloudfront.net/media/f3/2a/d9/1744020586/bb-klp-2023-mastercraft-fresh-beef-800px.jpg?ts=1744025859",
+    "title": "Dog Box BELCANDO Mastercraft Fresh Beef",
+    "price": "4,99€"
+  },
+  {
+    "id": "product_010",
+    "imageUrl": "https://d23dsm0lnesl7r.cloudfront.net/media/9a/8d/c7/1744020604/bb-klp-2023-mastercraft-fresh-chicken-800px.jpg?ts=1744025865",
+    "title": "Dog Box BELCANDO Mastercraft Fresh Chicken",
+    "price": "4,99€"
+  },
+  {
+    "id": "product_011",
+    "imageUrl": "https://d23dsm0lnesl7r.cloudfront.net/media/1d/44/3b/1744020616/bb-klp-2023-mastercraft-fresh-duck-800px.jpg?ts=1744025871",
+    "title": "Dog Box BELCANDO Mastercraft Fresh Duck",
+    "price": "4,99€"
+  },
+  {
+    "id": "product_012",
+    "imageUrl": "https://d23dsm0lnesl7r.cloudfront.net/media/a2/5f/89/1744020632/bb-klp-2023-senior-800px.jpg?ts=1744025877",
+    "title": "Dog Box BELCANDO Senior",
+    "price": "4,99€"
+  }
+]
