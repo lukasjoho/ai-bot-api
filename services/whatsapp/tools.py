@@ -10,15 +10,18 @@ def create_whatsapp_tools(phone_number: str, message_id: str):
     Create WhatsApp function tools with pre-bound phone_number and message_id
     Returns: List of function_tool objects
     """
+    print(f"Creating WhatsApp tools for phone_number: {phone_number} and message_id: {message_id}")
     
     @function_tool
     def send_text_message(response: str):
+        print(f"Sending text message to {phone_number} with response: {response}")
         """Send a text message back to the user."""
         data = create_text_message(phone_number, response)
         send_message(data)
     
     @function_tool
     def send_image_message(image_url: str, caption: str = ""):
+        print(f"Sending image message to {phone_number} with image_url: {image_url} and caption: {caption}")
         """Send an image message back to the user.
         Args:
             image_url: The URL of the image to send to the user.
@@ -29,6 +32,7 @@ def create_whatsapp_tools(phone_number: str, message_id: str):
     
     @function_tool
     def send_reaction_message(emoji: str = "👍"):
+        print(f"Sending reaction message to {phone_number} with emoji: {emoji}")
         """Send a reaction message back to the user.
         Args:
             emoji: The emoji to send to the user. Like 👍, 👎, 🤔, etc.
@@ -38,6 +42,7 @@ def create_whatsapp_tools(phone_number: str, message_id: str):
     
     @function_tool
     def send_location_message(latitude: float, longitude: float, name: str, address: str):
+        print(f"Sending location message to {phone_number} with latitude: {latitude}, longitude: {longitude}, name: {name}, address: {address}")
         """Send a location message back to the user.
         Args:
             latitude: The latitude of the location to send to the user.
@@ -50,6 +55,7 @@ def create_whatsapp_tools(phone_number: str, message_id: str):
     
     @function_tool
     def send_cta_message(body_text: str, button_text: str, button_url: str, header_type: Literal["image"] = None, header_content: str = None, footer_text: str = None):
+        print(f"Sending CTA message to {phone_number} with body_text: {body_text}, button_text: {button_text}, button_url: {button_url}, header_type: {header_type}, header_content: {header_content}, footer_text: {footer_text}")
         """Send a CTA message back to the user.
         Args:
             body_text: The body text of the message to send to the user.
@@ -64,16 +70,19 @@ def create_whatsapp_tools(phone_number: str, message_id: str):
     
     @function_tool
     def get_all_stores():
+        print(f"Getting all stores from the database")
         """Get all on-site stores from the database."""
         return get_data("stores.json")
     
     @function_tool
     def get_all_products():
+        print(f"Getting all products from the database")
         """Get all products from the database."""
         return get_data("products.json")
     
     @function_tool
     def get_all_tips():
+        print(f"Getting all tips and tricks from the database")
         """Get all tips and tricks from the database."""
         return get_data("tipps.json")
     
