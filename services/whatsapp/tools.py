@@ -82,7 +82,7 @@ def create_communication_tools(phone_number: str, message_id: str):
     
     @function_tool
     def send_text_message(response: str):
-        """Send a text message back to the user. Can be used to send a single text message or multiple text messages. Or in combination with other types of messages (e.g. image, location, reaction, cta)"""
+        """""Send a text message back to the user. Can be used to send a single text message or multiple text messages. Or in combination with other types of messages (e.g. image, location, reaction, cta)"""""
         data = create_text_message(phone_number, response)
         send_message(data)
     
