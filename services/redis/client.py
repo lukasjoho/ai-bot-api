@@ -41,6 +41,11 @@ class UpstashRedisClient:
         command = ["LPUSH", key] + list(values)
         return await self._execute_command(command)
     
+    async def rpush(self, key: str, *values: str) -> int:
+        """Push values to the right of a list"""
+        command = ["RPUSH", key] + list(values)
+        return await self._execute_command(command)
+    
     async def lrange(self, key: str, start: int, stop: int) -> List[str]:
         """Get a range of elements from a list"""
         command = ["LRANGE", key, str(start), str(stop)]
@@ -50,6 +55,11 @@ class UpstashRedisClient:
     async def lpop(self, key: str) -> Optional[str]:
         """Remove and return the first element of a list"""
         command = ["LPOP", key]
+        return await self._execute_command(command)
+    
+    async def rpop(self, key: str) -> Optional[str]:
+        """Remove and return the last element of a list"""
+        command = ["RPOP", key]
         return await self._execute_command(command)
     
     async def delete(self, key: str) -> int:
@@ -66,6 +76,16 @@ class UpstashRedisClient:
     async def expire(self, key: str, seconds: int) -> int:
         """Set expiration time for a key"""
         command = ["EXPIRE", key, str(seconds)]
+        return await self._execute_command(command)
+    
+    async def get(self, key: str) -> Optional[str]:
+        """Get the value of a key"""
+        command = ["GET", key]
+        return await self._execute_command(command)
+    
+    async def set(self, key: str, value: str) -> str:
+        """Set the value of a key"""
+        command = ["SET", key, value]
         return await self._execute_command(command)
 
 # Global client instance
