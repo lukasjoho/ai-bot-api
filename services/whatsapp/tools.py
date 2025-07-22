@@ -10,7 +10,7 @@ from services.database.database import get_data
 from dotenv import load_dotenv
 load_dotenv()
 
-def create_research_tools():
+def create_knowledge_tools():
 
     @function_tool
     def get_all_stores() -> list[Store]:
@@ -68,15 +68,15 @@ def create_research_tools():
         """
         return get_data("tips.json")
     
-    research_tools = [get_all_stores, get_all_products, get_all_tips]
+    knowledge_tools = [get_all_stores, get_all_products, get_all_tips]
     
     # Add FileSearchTool if vector store is available
     vector_store_id = os.getenv("OPENAI_VECTOR_STORE_ID")
     if vector_store_id:
         file_search_tool = FileSearchTool(vector_store_ids=[vector_store_id])
-        research_tools.append(file_search_tool)
+        knowledge_tools.append(file_search_tool)
     
-    return research_tools
+    return knowledge_tools
 
 def create_communication_tools(phone_number: str, message_id: str):
     
@@ -85,6 +85,7 @@ def create_communication_tools(phone_number: str, message_id: str):
         """""Send a text message back to the user. Can be used to send a single text message or multiple text messages. Or in combination with other types of messages (e.g. image, location, reaction, cta)"""""
         data = create_text_message(phone_number, response)
         send_message(data)
+        return "Text message sent"
     
     @function_tool
     def send_image_message(image_url: str, caption: str = ""):
@@ -95,7 +96,8 @@ def create_communication_tools(phone_number: str, message_id: str):
         """
         data = create_image_message(phone_number, image_url, caption)
         send_message(data)
-    
+        return "Image message sent"
+
     @function_tool
     def send_reaction_message(emoji: str = "👍"):
         """React funnily on a user's message. Use any emoji.
@@ -104,6 +106,7 @@ def create_communication_tools(phone_number: str, message_id: str):
         """
         data = create_reaction_message(phone_number, message_id, emoji)
         send_message(data)
+        return "Reaction message sent"
     
     @function_tool
     def send_location_message(latitude: float, longitude: float, name: str, address: str):
@@ -116,7 +119,7 @@ def create_communication_tools(phone_number: str, message_id: str):
         """
         data = create_location_message(phone_number, latitude, longitude, name, address)
         send_message(data)
-    
+        return "Location message sent"
     @function_tool
     def send_cta_message(body_text: str, button_text: str, button_url: str, header_type: Literal["image"] = None, header_content: str = None, footer_text: str = None):
         """Send a CTA message back to the user. Such a message "calls for" action and often advertises something.
@@ -130,7 +133,7 @@ def create_communication_tools(phone_number: str, message_id: str):
         """
         data = create_cta_message(phone_number, body_text, button_text, button_url, header_type, header_content, footer_text)
         send_message(data)
-    
+        return "CTA message sent"
     @function_tool
     def send_location_request(body_text: str):
         """Request the user to share their location. For example when they want to find a store or order something to their home adress.
@@ -139,6 +142,7 @@ def create_communication_tools(phone_number: str, message_id: str):
         """
         data = create_location_request_message(phone_number, body_text)
         send_message(data)
+        return "Location request sent"
     
     @function_tool
     def send_interactive_questions(body_text: str = "Was kann ich für dich tun? 🐾", button_text: str = "Frage auswählen"):
@@ -168,7 +172,8 @@ def create_communication_tools(phone_number: str, message_id: str):
         
         data = create_interactive_list_message(phone_number, body_text, button_text, sections)
         send_message(data)
-    
+        return "Interactive questions sent"
+        
     return [
         send_text_message, 
         send_image_message, 
@@ -178,14 +183,3 @@ def create_communication_tools(phone_number: str, message_id: str):
         send_location_request,
         send_interactive_questions
     ]
-    """
-    Create WhatsApp function tools with pre-bound phone_number and message_id
-    LEGACY: Returns combined research + communication tools for backward compatibility
-    """
-    
-    # Get both research and communication tools
-    research_tools = create_research_tools()
-    communication_tools = create_communication_tools(phone_number, message_id)
-    
-    # Return combined list for backward compatibility
-    return research_tools + communication_tools
