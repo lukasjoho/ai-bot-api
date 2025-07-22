@@ -1,8 +1,8 @@
-from agents import Agent, ModelSettings
+from agents import Agent, ModelSettings, Runner
 from dotenv import load_dotenv
-from services.whatsapp.tools import create_communication_tools
+from services.openai.tools.communication_tools import create_communication_tools
 from config.config import load_communication_prompt
-from services.openai.knowledge_agent import create_knowledge_agent
+from services.openai.agents.knowledge_agent import create_knowledge_agent
 
 load_dotenv()
 
@@ -30,3 +30,10 @@ def create_communication_agent(message: str, phone_number: str, message_id: str,
         model="gpt-4o",
         model_settings=ModelSettings(tool_choice="required")
     )
+
+async def run_communication_agent(message: str, phone_number: str, message_id: str, name: str, is_new_user: bool, previous_response_id: str | None):
+    communication_agent = create_communication_agent(message, phone_number, message_id, name, is_new_user)
+    query = f"Antworte auf diese Nachricht von {name}: {message}. (Neuer Nutzer?: {'Ja' if is_new_user else 'Nein'})"
+    
+    result = await Runner.run(communication_agent, query, previous_response_id=previous_response_id)
+    return result

@@ -2,7 +2,7 @@ import json
 import logging
 import asyncio
 from services.whatsapp.utils import is_valid_whatsapp_message, extract_whatsapp_data
-from services.openai.openai_agents import run_agents
+from services.openai.run import run_agents
 from services.whatsapp.api import send_message
 from services.whatsapp.messages import create_text_message
 

@@ -1,6 +1,6 @@
 from agents import Agent
 from dotenv import load_dotenv
-from services.whatsapp.tools import create_knowledge_tools
+from services.openai.tools.knowledge_tools import create_knowledge_tools
 from config.config import load_knowledge_prompt
 
 load_dotenv()
