@@ -2,7 +2,7 @@ import json
 import logging
 import asyncio
 from services.whatsapp.utils import is_valid_whatsapp_message, extract_whatsapp_data
-from services.openai.openai_agents import run_agent
+from services.openai.openai_agents import run_agents
 from services.whatsapp.api import send_message
 from services.whatsapp.messages import create_text_message
 
@@ -20,12 +20,10 @@ def handle_message(data: dict):
         return json.dumps({"message": "Invalid request body", "status": "error"}), 400
 
 async def handleTextMessage(message: dict, phone_number: str, name: str, message_id: str):
-    """Handle text messages by extracting body and invoking agent."""
     message_body = message["text"]["body"]
-    await run_agent(message_body, message_id, phone_number, name)
+    await run_agents(message_body, message_id, phone_number, name)
 
 async def handleLocationMessage(message: dict, phone_number: str, name: str, message_id: str):
-    """Handle location messages by formatting location data and invoking agent."""
     location = message["location"]
     latitude = location["latitude"]
     longitude = location["longitude"]
@@ -41,10 +39,9 @@ async def handleLocationMessage(message: dict, phone_number: str, name: str, mes
     location_parts.append(f"(Lat: {latitude}, Lng: {longitude})")
     
     location_message = f"User shared location: {' '.join(location_parts)}"
-    await run_agent(location_message, message_id, phone_number, name)
+    await run_agents(location_message, message_id, phone_number, name)
 
 async def handleInteractiveMessage(message: dict, phone_number: str, name: str, message_id: str):
-    """Handle interactive messages (button clicks, list selections) by extracting selection and invoking agent."""
     interactive = message["interactive"]
     
     if "list_reply" in interactive:
@@ -61,10 +58,9 @@ async def handleInteractiveMessage(message: dict, phone_number: str, name: str, 
         # Unknown interactive type
         interactive_message = "User interacted with message"
     
-    await run_agent(interactive_message, message_id, phone_number, name)
+    await run_agents(interactive_message, message_id, phone_number, name)
 
 async def process_whatsapp_message(data: dict):
-    """Main message processor that routes to specific handlers."""
     extracted_data = extract_whatsapp_data(data)
     phone_number = extracted_data["phone_number"]
     name = extracted_data["name"] 

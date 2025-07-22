@@ -1,62 +1,62 @@
-import os
-from agents import Agent, ModelSettings, Runner, model_settings
+from agents import Agent, ModelSettings, Runner, trace
 from dotenv import load_dotenv
 from services.whatsapp.api import send_message
 from services.whatsapp.messages import create_typing_indicator
-from services.whatsapp.tools import create_whatsapp_tools
-from services.redis.client import redis_client
-from config.config import load_system_prompt
+from services.whatsapp.tools import create_research_tools, create_communication_tools
+from services.redis.utils import get_previous_response_id, save_response_id
+from config.config import load_system_prompt, load_knowledge_prompt, load_communication_prompt
 
 load_dotenv()
 
-async def get_previous_response_id(phone_number: str) -> str | None:
-    """Get the last response ID for this phone number from Redis."""
-    key = f"response_id:{phone_number}"
-    response_id = await redis_client.get(key)
-    return response_id
+async def run_knowledge_agent(query: str, previous_response_id: str | None):
+    research_tools = create_research_tools()
+    research_prompt = load_knowledge_prompt()
+    
+    agent = Agent(
+        name="Gregor - Knowledge",
+        instructions=research_prompt,
+        tools=research_tools,
+        model="gpt-4o",
+    ) 
+    return await Runner.run(agent, query, previous_response_id=previous_response_id)
 
-async def save_response_id(phone_number: str, response_id: str) -> None:
-    """Save the response ID for this phone number to Redis."""
-    key = f"response_id:{phone_number}"
-    await redis_client.set(key, response_id)
-    # Optional: Set expiration (e.g., 7 days)
-    await redis_client.expire(key, 604800)
 
-async def run_agent(message: str, message_id: str, phone_number: str, name: str):
-    print(f"Running agent for name: {name} phone: {phone_number} with message: {message} with id: {message_id}")
-
-    # Send typing indicator immediately
+async def run_communication_agent(research_data: str, original_message: str, phone_number: str, message_id: str, name: str, is_new_user: bool, knowledge_response_id: str | None):
     typing_data = create_typing_indicator(message_id)
     send_message(typing_data)
     
-    # Get previous response ID for conversation continuity
-    previous_response_id = await get_previous_response_id(phone_number)
-    print(f"Previous response ID: {previous_response_id}")
-    
-    # Create tools with pre-bound phone_number and message_id
-    tools = create_whatsapp_tools(phone_number, message_id)
+    communication_tools = create_communication_tools(phone_number, message_id)
+    communication_prompt = load_communication_prompt(research_data, original_message, name, is_new_user)
 
-    # is_new_user = previous_response_id is None
-    is_new_user = True
-    
-    system_prompt = load_system_prompt(is_new_user)
-    print(f"System prompt loaded...")
     agent = Agent(
-        name="Gregor von Belcando", 
-        instructions=system_prompt, 
-        tools=tools,
+        name="Gregor - Communication",
+        instructions=communication_prompt,
+        tools=communication_tools,
+        model="gpt-4o",
         model_settings=ModelSettings(tool_choice="required")
     )
-    print(f"Agent created...")
+    
+    query = f"Antworte auf die Nachricht '{original_message}' basierend auf den Forschungsdaten."
+    return await Runner.run(agent, query, previous_response_id=knowledge_response_id)
 
-    # Run agent with previous_response_id for conversation continuity
-    print(f"Running agent with previous_response_id: {previous_response_id}")
-    result = await Runner.run(agent, message, previous_response_id=previous_response_id)
+async def run_agents(message: str, message_id: str, phone_number: str, name: str):
+    previous_response_id = await get_previous_response_id(phone_number)
+    is_new_user = previous_response_id is None
     
-    # Save the new response ID for next conversation turn
-    if result.last_response_id:
-        await save_response_id(phone_number, result.last_response_id)
-        print(f"Saved response ID: {result.last_response_id}")
+    with trace("Gregor - Agent Workflow"):
+        knowledge_result = await run_knowledge_agent(message, previous_response_id)
     
-    print(f"Agent run completed")
-    return result.final_output
+        communication_result = await run_communication_agent(
+            research_data=knowledge_result.final_output,
+            original_message=message,
+            phone_number=phone_number,
+            message_id=message_id,
+            name=name,
+            is_new_user=is_new_user,
+            knowledge_response_id=knowledge_result.last_response_id
+        )
+    
+    if communication_result.last_response_id:
+        await save_response_id(phone_number, communication_result.last_response_id)
+    
+    return communication_result

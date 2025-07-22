@@ -1,0 +1,66 @@
+[
+  {
+    "id": "tip_001",
+    "image": "https://d23dsm0lnesl7r.cloudfront.net/media/6d/09/43/1731491803/blog-puppy-blues.jpg",
+    "title": "Von Welpenfreude zu Welpenfrust: Was ist \"Puppy Blues\"?",
+    "description": "Wie die anfängliche Freude am neuen Welpen in den 'Puppy Blues' umschlagen kann und wie frischgebackene Hundebesitzer damit umgehen können",
+    "url": "https://www.belcando.de/pfotentipps/frust-mit-welpen",
+    "cta": "Mehr lesen"
+  },
+  {
+    "id": "tip_002",
+    "image": "https://d23dsm0lnesl7r.cloudfront.net/media/24/66/ab/1709204227/mischling-header.jpg",
+    "title": "Oder doch lieber einen Mischling?",
+    "description": "Der „Mischling\" ist der Lieblingshund der Deutschen. Seit vielen Jahren führt er beispielsweise die Registrierungen bei „TASSO\" an.",
+    "url": "https://www.belcando.de/pfotentipps/kolumnen/mischlingshund",
+    "cta": "Mehr lesen"
+  },
+  {
+    "id": "tip_003",
+    "image": "https://d23dsm0lnesl7r.cloudfront.net/media/be/e4/b3/1708586358/buerokratie-welpen-versicherung-und-steuer.jpg",
+    "title": "Der \"bürokratische Welpe\" - Hundesteuer, Hundeversicherung & Co.",
+    "description": "Hinweise zu den bürokratischen Fallstricke, die bei der Anschaffung eines Welpen oft vergessen werden",
+    "url": "https://www.belcando.de/pfotentipps/buerokratische-welpe",
+    "cta": "Mehr lesen"
+  },
+  {
+    "id": "tip_004",
+    "image": "https://d23dsm0lnesl7r.cloudfront.net/media/c8/7a/91/1707983082/erziehungstipps-welpen-header.jpg",
+    "title": "Erziehungstipps für Welpen: Die ersten Monate entscheiden",
+    "description": "Wichtige Grundlagen für die Welpenerziehung in den ersten Lebensmonaten - von der Stubenreinheit bis zu den ersten Kommandos",
+    "url": "https://www.belcando.de/pfotentipps/welpenerziehung-grundlagen",
+    "cta": "Mehr lesen"
+  },
+  {
+    "id": "tip_005",
+    "image": "https://d23dsm0lnesl7r.cloudfront.net/media/f2/1e/c4/1706781249/gesunde-ernaehrung-hund-header.jpg",
+    "title": "Gesunde Hundeernährung: Was braucht mein Hund wirklich?",
+    "description": "Alles über die richtige Ernährung für Hunde - von Nährstoffen über Fütterungszeiten bis zu speziellen Bedürfnissen verschiedener Rassen",
+    "url": "https://www.belcando.de/pfotentipps/gesunde-hundeernaehrung",
+    "cta": "Mehr lesen"
+  },
+  {
+    "id": "tip_006",
+    "image": "https://d23dsm0lnesl7r.cloudfront.net/media/d3/42/88/1705576412/hundepflege-winter-header.jpg",
+    "title": "Hundepflege im Winter: So kommen Hunde gesund durch die kalte Jahreszeit",
+    "description": "Tipps für die richtige Pflege und den Schutz von Hunden in der Winterzeit - von Pfotenpflege bis zu warmer Kleidung",
+    "url": "https://www.belcando.de/pfotentipps/hundepflege-winter",
+    "cta": "Mehr lesen"
+  },
+  {
+    "id": "tip_007",
+    "image": "https://d23dsm0lnesl7r.cloudfront.net/media/a8/15/f6/1704371575/hundetraining-zuhause-header.jpg",
+    "title": "Hundetraining zu Hause: Übungen für jeden Tag",
+    "description": "Einfache und effektive Trainingsübungen, die Sie täglich mit Ihrem Hund zu Hause durchführen können",
+    "url": "https://www.belcando.de/pfotentipps/hundetraining-zuhause",
+    "cta": "Mehr lesen"
+  },
+  {
+    "id": "tip_008",
+    "image": "https://d23dsm0lnesl7r.cloudfront.net/media/b9/f7/21/1703162738/senior-hund-pflege-header.jpg",
+    "title": "Senior-Hunde: Besondere Bedürfnisse im Alter",
+    "description": "Was ältere Hunde brauchen - von spezieller Ernährung über angepasste Bewegung bis zur Gesundheitsvorsorge",
+    "url": "https://www.belcando.de/pfotentipps/senior-hunde-pflege",
+    "cta": "Mehr lesen"
+  }
+]
