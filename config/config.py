@@ -23,3 +23,12 @@ def load_communication_prompt(original_message: str, name: str, is_new_user: boo
         name=name,
         new_user_note=new_user_note
     )
+
+def load_reaction_prompt():
+    project_root = os.path.dirname(os.path.dirname(__file__))
+    config_path = os.path.join(project_root, "config", "reaction_prompt.txt")
+    
+    with open(config_path, 'r', encoding='utf-8') as file:
+        prompt = file.read().strip()
+    
+    return prompt

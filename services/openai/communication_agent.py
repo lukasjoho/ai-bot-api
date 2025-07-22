@@ -11,7 +11,7 @@ def create_communication_agent(message: str, phone_number: str, message_id: str,
     knowledge_agent = create_knowledge_agent()
     knowledge_retrieval_tool = knowledge_agent.as_tool(
         tool_name="knowledge_retrieval_tool",
-        tool_description="Recherchiere spezifische Belcando-Informationen zu Stores, Produkten, Tipps oder Firmendokumenten."
+        tool_description="Recherchiere spezifische Belcando-Informationen zu Stores, Produkten, Tipps oder Firmendokumenten.",
     )
     
     # Get WhatsApp communication tools

@@ -5,6 +5,7 @@ from services.whatsapp.api import send_message
 from services.whatsapp.messages import create_typing_indicator, create_text_message
 from services.redis.utils import get_previous_response_id, save_response_id
 from services.openai.communication_agent import create_communication_agent
+from services.openai.reaction_agent import run_reaction_agent
 
 load_dotenv()
 
@@ -17,13 +18,17 @@ async def run_agents(message: str, message_id: str, phone_number: str, name: str
         previous_response_id = await get_previous_response_id(phone_number)
         is_new_user = previous_response_id is None
         
-        # Create communication agent with knowledge tool
-        communication_agent = create_communication_agent(message, phone_number, message_id, name, is_new_user)
+        with trace("Gregor - Complete Workflow"):
+            # First: Run reaction agent for quick emoji response
+            reaction_response_id = await run_reaction_agent(message, phone_number, message_id, previous_response_id)
+            
+            # Create communication agent with knowledge tool  
+            communication_agent = create_communication_agent(message, phone_number, message_id, name, is_new_user)
 
-        query = f"Antworte auf diese Nachricht von {name}: {message}. (Neuer Nutzer?: {'Ja' if is_new_user else 'Nein'})"
-        
-        with trace("Gregor - Communication Workflow"):
-            result = await Runner.run(communication_agent, query, previous_response_id=previous_response_id)
+            query = f"Antworte auf diese Nachricht von {name}: {message}. (Neuer Nutzer?: {'Ja' if is_new_user else 'Nein'})"
+            
+            # Use reaction_response_id to continue the conversation chain
+            result = await Runner.run(communication_agent, query, previous_response_id=reaction_response_id)
         
         if result.last_response_id:
             await save_response_id(phone_number, result.last_response_id)

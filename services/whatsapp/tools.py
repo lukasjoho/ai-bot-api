@@ -105,15 +105,6 @@ def create_communication_tools(phone_number: str, message_id: str):
         send_message(data)
         return "Image message sent"
 
-    @function_tool
-    def send_reaction_message(emoji: str = "👍"):
-        """Reagiere auf eine Nachricht des Nutzers mit einem Emoji. Sollte bei fast jeder Nachricht verwendet werden und sollte auf die Nachricht des Nutzers abgestimmt sein.
-        Args:
-            emoji: Das Emoji, das an den Nutzer gesendet werden soll. Z.B. 👍, 👎, 🤔, etc.
-        """
-        data = create_reaction_message(phone_number, message_id, emoji)
-        send_message(data)
-        return "Reaction message sent"
     
     @function_tool
     def send_location_message(latitude: float, longitude: float, name: str, address: str):
@@ -190,7 +181,6 @@ def create_communication_tools(phone_number: str, message_id: str):
     return [
         send_text_message, 
         send_image_message, 
-        send_reaction_message, 
         send_location_message, 
         send_cta_message,
         send_location_request,

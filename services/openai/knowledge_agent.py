@@ -13,5 +13,5 @@ def create_knowledge_agent():
         name="Gregor - Knowledge",
         instructions=knowledge_prompt,
         tools=knowledge_tools,
-        model="gpt-4o",
+        model="gpt-4o",    
     )
