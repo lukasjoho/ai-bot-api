@@ -1,11 +1,21 @@
 from typing import Literal
 from agents import function_tool
 from services.whatsapp.api import send_message
-from services.whatsapp.messages import create_text_message, create_image_message, create_location_message, create_cta_message, create_location_request_message, create_interactive_list_message
+from services.whatsapp.messages import create_reaction_message, create_text_message, create_image_message, create_location_message, create_cta_message, create_location_request_message, create_interactive_list_message
 from services.database.database import get_data
 
 def create_communication_tools(phone_number: str, message_id: str):
-    
+
+    @function_tool
+    def send_reaction(emoji: str):
+        """Sende ein Emoji auf die Nachricht des Nutzers. Nutze diese Funktion bei jeder Nachricht des Nutzers.
+        Args:
+            emoji: Einzelnes Emoji, das auf die Nachricht des Nutzers gesendet wird (z.B. 🐕, 👍, 🤔, ❤️, 😊, 🎉, etc.)
+        """
+        data = create_reaction_message(phone_number, message_id, emoji)
+        send_message(data)
+        return f"Reacted with {emoji}"
+
     @function_tool
     def send_text_message(response: str):
         """Sende eine Textnachricht an den Nutzer. Kann auch in Kombination mit anderen Nachrichtentypen (z.B. Bild, Standort, Reaktion, CTA) verwendet werden.
@@ -109,5 +119,6 @@ def create_communication_tools(phone_number: str, message_id: str):
         send_location_message, 
         send_cta_message,
         send_location_request,
-        send_interactive_questions
+        send_interactive_questions,
+        send_reaction
     ]

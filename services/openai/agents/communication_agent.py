@@ -35,5 +35,4 @@ async def run_communication_agent(message: str, phone_number: str, message_id: s
     communication_agent = create_communication_agent(message, phone_number, message_id, name, is_new_user)
     query = f"Antworte auf diese Nachricht von {name}: {message}. (Neuer Nutzer?: {'Ja' if is_new_user else 'Nein'})"
     
-    result = await Runner.run(communication_agent, query, previous_response_id=previous_response_id)
-    return result
+    return await Runner.run(communication_agent, query, previous_response_id=previous_response_id)

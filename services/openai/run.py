@@ -5,7 +5,6 @@ from services.whatsapp.api import send_message
 from services.whatsapp.messages import create_typing_indicator, create_text_message
 from services.redis.utils import get_previous_response_id, save_response_id
 from services.openai.agents.communication_agent import run_communication_agent
-from services.openai.agents.reaction_agent import run_reaction_agent
 
 load_dotenv()
 
@@ -19,11 +18,7 @@ async def run_agents(message: str, message_id: str, phone_number: str, name: str
         is_new_user = previous_response_id is None
         
         with trace("Gregor - Complete Workflow"):
-            # First: Run reaction agent for quick emoji response
-            reaction_result = await run_reaction_agent(message, phone_number, message_id, previous_response_id)
-            
-            # Then run communication agent using reaction result ID
-            result = await run_communication_agent(message, phone_number, message_id, name, is_new_user, reaction_result.last_response_id)
+            result = await run_communication_agent(message, phone_number, message_id, name, is_new_user, previous_response_id)
         
         if result.last_response_id:
             await save_response_id(phone_number, result.last_response_id)
