@@ -1,0 +1,32 @@
+[
+  {
+    "id": "stores_finden",
+    "title": "Belcando Läden finden",
+    "description": "Alle Geschäfte und Stores in deiner Nähe finden"
+  },
+  {
+    "id": "produkte_sortiment",
+    "title": "Produkte & Sortiment",
+    "description": "Unser komplettes Hundefutter- und Snack-Angebot"
+  },
+  {
+    "id": "tipps_tricks",
+    "title": "Tipps & Tricks",
+    "description": "Hilfreiche Ratschläge für Hundehalter"
+  },
+  {
+    "id": "home_delivery",
+    "title": "Online bestellen",
+    "description": "Online-Bestellung und Lieferservice zu dir nach Hause"
+  },
+  {
+    "id": "futter_empfehlung",
+    "title": "Futter-Empfehlung",
+    "description": "Individuelle Futterberatung je nach Bedürfnissen"
+  },
+  {
+    "id": "kontakt_beratung",
+    "title": "Persönliche Beratung",
+    "description": "Direkter Kontakt zu unseren Experten"
+  }
+]

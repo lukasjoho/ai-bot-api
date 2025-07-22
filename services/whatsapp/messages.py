@@ -110,3 +110,65 @@ def create_cta_message(phone_number: str, body_text: str, button_text: str, butt
         }
     
     return message
+
+def create_location_request_message(phone_number: str, body_text: str):
+    """
+    Create a WhatsApp location request message that prompts the user to share their location
+    Args:
+        phone_number: Recipient phone number
+        body_text: Text asking for location (e.g., "Please share your location")
+    """
+    message = _create_base_message(phone_number, "interactive")
+    message["interactive"] = {
+        "type": "location_request_message",
+        "body": {
+            "text": body_text
+        },
+        "action": {
+            "name": "send_location"
+        }
+    }
+    return message
+
+def create_interactive_list_message(phone_number: str, body_text: str, button_text: str, sections: list):
+    """
+    Create a WhatsApp interactive list message
+    Args:
+        phone_number: Recipient phone number
+        body_text: Main message text
+        button_text: Text on the button to open the list (e.g., "Auswählen")
+        sections: List of sections, each containing rows with id, title, and description
+                 Format: [{"title": "Section Title", "rows": [{"id": "item_id", "title": "Item Title", "description": "Item Description"}]}]
+    """
+    message = _create_base_message(phone_number, "interactive")
+    
+    # Validate and clean sections - ensure titles and descriptions are within limits
+    cleaned_sections = []
+    for section in sections:
+        cleaned_rows = []
+        for row in section.get("rows", []):
+            # WhatsApp has character limits: title max 24 chars, description max 72 chars
+            cleaned_row = {
+                "id": str(row["id"]),  # Ensure ID is string
+                "title": str(row["title"])[:24],  # Truncate if too long
+                "description": str(row.get("description", ""))[:72]  # Truncate if too long
+            }
+            cleaned_rows.append(cleaned_row)
+        
+        if cleaned_rows:  # Only add section if it has rows
+            cleaned_sections.append({
+                "title": str(section["title"])[:24],  # Section title also has limits
+                "rows": cleaned_rows
+            })
+    
+    message["interactive"] = {
+        "type": "list",
+        "body": {
+            "text": body_text
+        },
+        "action": {
+            "button": button_text,
+            "sections": cleaned_sections
+        }
+    }
+    return message

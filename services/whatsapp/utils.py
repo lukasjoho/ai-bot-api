@@ -29,6 +29,7 @@ def process_text_for_whatsapp(text):
     return whatsapp_style_text
 
 def extract_whatsapp_data(data: dict) -> dict:
+    """Extract core WhatsApp data and message object for further processing."""
     try:
         entry = data["entry"][0]
         change = entry["changes"][0]
@@ -40,14 +41,15 @@ def extract_whatsapp_data(data: dict) -> dict:
             "phone_number": contact["wa_id"],
             "name": contact["profile"]["name"],
             "message_id": message["id"],
-            "message_body": message["text"]["body"],
-            "message_type": message.get("type", "text")
+            "message_type": message.get("type", "text"),
+            "message": message  # Raw message object for type-specific handlers
         }
     except (KeyError, IndexError, TypeError):
         return {
             "phone_number": None,
             "name": None,
             "message_id": None,
-            "message_body": None,
-            "message_type": None
+            "message_type": None,
+            "message": None
         }
+

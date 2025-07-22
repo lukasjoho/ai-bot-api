@@ -1,8 +1,7 @@
-from functools import partial
 from typing import Literal
 from agents import function_tool
 from services.whatsapp.api import send_message
-from services.whatsapp.messages import create_text_message, create_image_message, create_reaction_message, create_location_message, create_cta_message
+from services.whatsapp.messages import create_text_message, create_image_message, create_reaction_message, create_location_message, create_cta_message, create_location_request_message, create_interactive_list_message
 from services.database.database import get_data
 
 def create_whatsapp_tools(phone_number: str, message_id: str):
@@ -14,14 +13,12 @@ def create_whatsapp_tools(phone_number: str, message_id: str):
     
     @function_tool
     def send_text_message(response: str):
-        print(f"Sending text message to {phone_number} with response: {response}")
-        """Send a text message back to the user."""
+        """Send a text message back to the user. Can be used to send a single text message or multiple text messages. Or in combination with other types of messages (e.g. image, location, reaction, cta)"""
         data = create_text_message(phone_number, response)
         send_message(data)
     
     @function_tool
     def send_image_message(image_url: str, caption: str = ""):
-        print(f"Sending image message to {phone_number} with image_url: {image_url} and caption: {caption}")
         """Send an image message back to the user.
         Args:
             image_url: The URL of the image to send to the user.
@@ -32,8 +29,7 @@ def create_whatsapp_tools(phone_number: str, message_id: str):
     
     @function_tool
     def send_reaction_message(emoji: str = "👍"):
-        print(f"Sending reaction message to {phone_number} with emoji: {emoji}")
-        """Send a reaction message back to the user.
+        """React funnily on a user's message. Use any emoji.
         Args:
             emoji: The emoji to send to the user. Like 👍, 👎, 🤔, etc.
         """
@@ -42,8 +38,7 @@ def create_whatsapp_tools(phone_number: str, message_id: str):
     
     @function_tool
     def send_location_message(latitude: float, longitude: float, name: str, address: str):
-        print(f"Sending location message to {phone_number} with latitude: {latitude}, longitude: {longitude}, name: {name}, address: {address}")
-        """Send a location message back to the user.
+        """Send a location message back to the user showing a map with a point so that users can better understand a location.
         Args:
             latitude: The latitude of the location to send to the user.
             longitude: The longitude of the location to send to the user.
@@ -55,8 +50,7 @@ def create_whatsapp_tools(phone_number: str, message_id: str):
     
     @function_tool
     def send_cta_message(body_text: str, button_text: str, button_url: str, header_type: Literal["image"] = None, header_content: str = None, footer_text: str = None):
-        print(f"Sending CTA message to {phone_number} with body_text: {body_text}, button_text: {button_text}, button_url: {button_url}, header_type: {header_type}, header_content: {header_content}, footer_text: {footer_text}")
-        """Send a CTA message back to the user.
+        """Send a CTA message back to the user. Such a message "calls for" action and often advertises something.
         Args:
             body_text: The body text of the message to send to the user.
             button_text: The text in the button to send to the user.
@@ -70,21 +64,101 @@ def create_whatsapp_tools(phone_number: str, message_id: str):
     
     @function_tool
     def get_all_stores():
-        print(f"Getting all stores from the database")
-        """Get all on-site stores from the database."""
+        """Get all on-site Belcando stores from the database. Can be used to list all, or to get information about only 1 or 2 nearby.
+        
+        Return example:
+        [
+            {
+                "id": "store_001",
+                "name": "Belcando Store Berlin",
+                "latitude": 52.52437,
+                "longitude": 13.41053,
+                "address": {    
+                    "street": "Kurfürstendamm 100",
+                    "zipcode": "10707",
+                    "city": "Berlin"
+                }
+            }
+        ]
+        """
         return get_data("stores.json")
     
     @function_tool
     def get_all_products():
         print(f"Getting all products from the database")
-        """Get all products from the database."""
+        """Get all products from the database. Can be used to list all, or to get information about only 1 or 2.
+        
+        Return example:
+        [
+            {
+                "id": "product_001",
+                "imageUrl": "https://d23dsm0lnesl7r.cloudfront.net/media/bc/46/92/1744020374/bb-klp-2023-adult-active-800px.jpg",
+                "title": "Dog Box BELCANDO Adult Active",
+                "price": "4,99€"
+            }
+        ]
+        """
         return get_data("products.json")
     
     @function_tool
     def get_all_tips():
         print(f"Getting all tips and tricks from the database")
-        """Get all tips and tricks from the database."""
+        """Get all tips and tricks from the database. They are blogposts from the website showing how to take care of your dogs.
+        
+        Return example:
+        
+        [
+            {
+                "id": "tipp_001",
+                "image": "https://d23dsm0lnesl7r.cloudfront.net/media/6d/09/43/1731491803/blog-puppy-blues.jpg",
+                "title": "Von Welpenfreude zu Welpenfrust: Was ist \"Puppy Blues\"?",
+                "description": "Wie die anfängliche Freude am neuen Welpen in den 'Puppy Blues' umschlagen kann und wie frischgebackene Hundebesitzer damit umgehen können",
+                "url": "https://www.belcando.de/pfotentipps/frust-mit-welpen",
+                "cta": "Mehr lesen"
+            }
+        ]
+        """
         return get_data("tipps.json")
+    
+    @function_tool
+    def send_location_request(body_text: str):
+        print(f"Sending location request to {phone_number} with text: {body_text}")
+        """Request the user to share their location. For example when they want to find a store or order something to their home adress.
+        Args:
+            body_text: Text asking for location (e.g., "Bitte teile deinen Standort mit mir")
+        """
+        data = create_location_request_message(phone_number, body_text)
+        send_message(data)
+    
+    @function_tool
+    def send_interactive_questions(body_text: str = "Was kann ich für dich tun? 🐾", button_text: str = "Frage auswählen"):
+        print(f"Sending interactive questions list to {phone_number}")
+        """Send an interactive list of questions/topics the user can choose from.
+        Important: Send ALWAYS in beginning of conversation with a new user! This gives a user the idea of what to ask.
+        Args:
+            body_text: Text above the questions list (default: "Was kann ich für dich tun? 🐾")
+            button_text: Text on the button to open the list (default: "Frage auswählen")
+        """
+        # Get questions from database
+        questions = get_data("questions.json")
+        
+        # Format questions as WhatsApp list rows
+        rows = []
+        for question in questions:
+            rows.append({
+                "id": question["id"],
+                "title": question["title"], 
+                "description": question["description"]
+            })
+        
+        # Create sections (WhatsApp requires at least one section)
+        sections = [{
+            "title": "Wie kann ich dir helfen?",
+            "rows": rows
+        }]
+        
+        data = create_interactive_list_message(phone_number, body_text, button_text, sections)
+        send_message(data)
     
     return [
         send_text_message, 
@@ -92,6 +166,8 @@ def create_whatsapp_tools(phone_number: str, message_id: str):
         send_reaction_message, 
         send_location_message, 
         send_cta_message,
+        send_location_request,
+        send_interactive_questions,
         get_all_stores, 
         get_all_products, 
         get_all_tips

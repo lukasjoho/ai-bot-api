@@ -35,8 +35,11 @@ async def run_agent(message: str, message_id: str, phone_number: str, name: str)
     
     # Create tools with pre-bound phone_number and message_id
     tools = create_whatsapp_tools(phone_number, message_id)
+
+    # is_new_user = previous_response_id is None
+    is_new_user = True
     
-    system_prompt = load_system_prompt()
+    system_prompt = load_system_prompt(is_new_user)
     print(f"System prompt loaded...")
     agent = Agent(
         name="Gregor von Belcando", 
