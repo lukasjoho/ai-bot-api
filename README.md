@@ -1,6 +1,6 @@
-# AI Bot API
+# Gregor
 
-A WhatsApp bot API that integrates with OpenAI and Supabase for intelligent conversation handling.
+An intelligent WhatsApp bot that integrates with OpenAI and Upstash for smart conversation handling and data persistence.
 
 ## Setup
 
@@ -10,15 +10,17 @@ A WhatsApp bot API that integrates with OpenAI and Supabase for intelligent conv
 - [uv](https://docs.astral.sh/uv/) package manager
 - OpenAI API key
 - WhatsApp Business API credentials
-- Supabase project
+- Upstash Redis database
+- Upstash Vector database (optional)
+- Upstash QStash (optional)
 
 ### Installation
 
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/lukasjoho/ai-bot-api.git
-cd ai-bot-api
+git clone https://github.com/lukasjoho/gregor.git
+cd gregor
 ```
 
 2. Install dependencies using uv:
@@ -47,22 +49,32 @@ WHATSAPP_RECIPIENT_DEMO_WAID=your_demo_waid
 OPENAI_API_KEY=your_actual_openai_api_key
 OPENAI_ASSISTANT_ID=your_actual_assistant_id
 
-# Supabase
-SUPABASE_URL=your_actual_supabase_url
-SUPABASE_API_KEY=your_actual_supabase_api_key
+# Upstash
+UPSTASH_REDIS_URL=your_upstash_redis_url
+UPSTASH_REDIS_TOKEN=your_upstash_redis_token
+UPSTASH_VECTOR_URL=your_upstash_vector_url
 ```
 
 ### Running the Application
 
+1. Start the development server:
+
 ```bash
-uv run python main.py
+uv run uvicorn main:app --reload
+```
+
+2. In another terminal, expose your local server using ngrok:
+
+```bash
+ngrok http localhost:8000
 ```
 
 ## Features
 
 - WhatsApp message handling and verification
-- OpenAI Assistant integration for intelligent responses
-- Supabase database for conversation persistence
+- OpenAI Assistant integration with specialized agents
+- Upstash Redis for session management and caching
+- Multi-agent architecture for knowledge and communication
 - Async/await architecture for better performance
 
 ## Security
@@ -74,13 +86,33 @@ uv run python main.py
 ## Project Structure
 
 ```
-ai-bot-api/
-├── main.py                 # FastAPI application entry point
-├── routers/               # API route handlers
-│   └── whatsapp.py       # WhatsApp webhook routes
-├── services/             # Business logic services
-│   ├── openai/          # OpenAI integration
-│   ├── supabase/        # Database operations
-│   └── whatsapp/        # WhatsApp API utilities
-└── pyproject.toml       # Project configuration and dependencies
+gregor/
+├── main.py                    # FastAPI application entry point
+├── config/                    # Configuration files
+│   ├── config.py             # App configuration
+│   ├── communication_prompt.txt
+│   └── knowledge_prompt.txt
+├── routers/                   # API route handlers
+│   └── whatsapp.py           # WhatsApp webhook routes
+├── services/                  # Business logic services
+│   ├── openai/               # OpenAI integration
+│   │   ├── agents/           # Specialized AI agents
+│   │   │   ├── communication_agent.py
+│   │   │   └── knowledge_agent.py
+│   │   ├── tools/            # Agent tools
+│   │   └── run.py            # Agent runner
+│   ├── database/             # Local data storage
+│   │   ├── data/             # JSON data files
+│   │   └── database.py       # Database utilities
+│   ├── redis/                # Upstash Redis integration
+│   │   ├── client.py         # Redis client
+│   │   ├── session.py        # Session management
+│   │   └── utils.py          # Redis utilities
+│   └── whatsapp/             # WhatsApp API utilities
+│       ├── api.py            # WhatsApp API client
+│       ├── handler.py        # Message handlers
+│       ├── messages.py       # Message utilities
+│       └── verify.py         # Webhook verification
+├── pyproject.toml            # Project configuration
+└── uv.lock                   # Dependency lock file
 ```
