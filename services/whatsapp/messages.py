@@ -1,3 +1,4 @@
+from typing import Literal
 from services.whatsapp.utils import process_text_for_whatsapp
 
 def _create_base_message(phone_number: str, message_type: str = None):
@@ -61,7 +62,7 @@ def create_typing_indicator(message_id: str):
         }
     }
 
-def create_cta_message(phone_number: str, body_text: str, button_text: str, button_url: str, header_type: str = None, header_content: str = None, footer_text: str = None):
+def create_cta_message(phone_number: str, body_text: str, button_text: str, button_url: str, header_type: Literal["text", "image"] = None, header_content: str = None, footer_text: str = None):
     """
     Create a WhatsApp CTA (Call-to-Action) interactive message
     Args:
@@ -69,9 +70,6 @@ def create_cta_message(phone_number: str, body_text: str, button_text: str, butt
         body_text: Main message text
         button_text: Text displayed on the button
         button_url: URL the button links to
-        header_type: Optional header type ("text", "image", "video", "document")
-        header_content: Header content (text or URL)
-        footer_text: Optional footer text
     """
     message = _create_base_message(phone_number, "interactive")
     message["interactive"] = {
@@ -95,13 +93,17 @@ def create_cta_message(phone_number: str, body_text: str, button_text: str, butt
                 "type": "text",
                 "text": header_content
             }
-        elif header_type in ["image", "video", "document"]:
-            message["interactive"]["header"] = {
-                "type": header_type,
-                header_type: {
-                    "link": header_content
+        elif header_type == "image":
+            OG_IMAGE = "https://d23dsm0lnesl7r.cloudfront.net/media/91/3f/77/1713433379/bb-open-graph-image-BELCANDO.jpeg"
+            imageUrl = OG_IMAGE
+            # Validate image URL
+            if _is_valid_image_url(imageUrl):
+                message["interactive"]["header"] = {
+                    "type": "image",
+                    "image": {
+                        "link": imageUrl
+                    }
                 }
-            }
     
     # Add footer if provided
     if footer_text:
@@ -110,6 +112,40 @@ def create_cta_message(phone_number: str, body_text: str, button_text: str, butt
         }
     
     return message
+
+def _is_valid_image_url(url: str) -> bool:
+    """Validate if URL is a valid image URL"""
+    if not url:
+        return False
+        
+    # Check for invalid/example URLs
+    invalid_patterns = ["example.com", "placeholder", "dummy", "test", "lorem", "temp"]
+    if any(pattern in url.lower() for pattern in invalid_patterns):
+        return False
+    
+    # Check if URL has image extension
+    image_extensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp', '.svg']
+    if not any(url.lower().endswith(ext) for ext in image_extensions):
+        return False
+    
+    try:
+        import requests
+        # Quick HEAD request to validate URL exists and is an image
+        response = requests.head(url, timeout=5)
+        if response.status_code >= 400:
+            return False
+            
+        # Check content-type header
+        content_type = response.headers.get('content-type', '').lower()
+        if content_type and 'image/' in content_type:
+            return True
+            
+        # Fallback: if no content-type header, trust the file extension
+        return any(url.lower().endswith(ext) for ext in image_extensions)
+        
+    except Exception:
+        # If validation fails, reject the URL
+        return False
 
 def create_location_request_message(phone_number: str, body_text: str):
     """

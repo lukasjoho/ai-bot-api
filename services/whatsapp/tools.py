@@ -1,7 +1,7 @@
 import os
 from typing import Literal
 from agents import function_tool
-from agents.tool import FileSearchTool
+from agents.tool import FileSearchTool, WebSearchTool
 from services.database.types import Product, Store, Tip
 from services.whatsapp.api import send_message
 from services.whatsapp.messages import create_text_message, create_image_message, create_reaction_message, create_location_message, create_cta_message, create_location_request_message, create_interactive_list_message
@@ -75,6 +75,9 @@ def create_knowledge_tools():
     if vector_store_id:
         file_search_tool = FileSearchTool(vector_store_ids=[vector_store_id])
         knowledge_tools.append(file_search_tool)
+
+    website_search_tool = WebSearchTool()
+    knowledge_tools.append(website_search_tool)
     
     return knowledge_tools
 
@@ -82,17 +85,21 @@ def create_communication_tools(phone_number: str, message_id: str):
     
     @function_tool
     def send_text_message(response: str):
-        """""Send a text message back to the user. Can be used to send a single text message or multiple text messages. Or in combination with other types of messages (e.g. image, location, reaction, cta)"""""
+        """""Sende eine Textnachricht an den Nutzer. Kann auch in Kombination mit anderen Nachrichtentypen (z.B. Bild, Standort, Reaktion, CTA) verwendet werden.
+        
+        Args:
+            response: Die Textnachricht, die an den Nutzer gesendet werden soll.
+        """
         data = create_text_message(phone_number, response)
         send_message(data)
         return "Text message sent"
     
     @function_tool
     def send_image_message(image_url: str, caption: str = ""):
-        """Send an image message back to the user.
+        """Sende ein Bild an den Nutzer mit einer Bildbeschreibung.
         Args:
-            image_url: The URL of the image to send to the user.
-            caption: The caption of the image to send to the user.
+            image_url: Die URL des Bildes, das an den Nutzer gesendet werden soll.
+            caption: Die Bildbeschreibung, die an den Nutzer gesendet werden soll.
         """
         data = create_image_message(phone_number, image_url, caption)
         send_message(data)
@@ -100,9 +107,9 @@ def create_communication_tools(phone_number: str, message_id: str):
 
     @function_tool
     def send_reaction_message(emoji: str = "👍"):
-        """React funnily on a user's message. Use any emoji.
+        """Reagiere auf eine Nachricht des Nutzers mit einem Emoji. Sollte bei fast jeder Nachricht verwendet werden und sollte auf die Nachricht des Nutzers abgestimmt sein.
         Args:
-            emoji: The emoji to send to the user. Like 👍, 👎, 🤔, etc.
+            emoji: Das Emoji, das an den Nutzer gesendet werden soll. Z.B. 👍, 👎, 🤔, etc.
         """
         data = create_reaction_message(phone_number, message_id, emoji)
         send_message(data)
@@ -110,7 +117,8 @@ def create_communication_tools(phone_number: str, message_id: str):
     
     @function_tool
     def send_location_message(latitude: float, longitude: float, name: str, address: str):
-        """Send a location message back to the user showing a map with a point so that users can better understand a location.
+        """Sende eine Standortnachricht an den Nutzer, die einen Standort auf einer Karte anzeigt. Nutze diese Funktion um z.B Belcando-Stores anzuzeigen. Kann zum Beispiel dann verwendet werden wenn Nutzer fragen, wo sich ein Belcando-Store befindet oder wo generell verkauft wird.
+        
         Args:
             latitude: The latitude of the location to send to the user.
             longitude: The longitude of the location to send to the user.
@@ -121,15 +129,20 @@ def create_communication_tools(phone_number: str, message_id: str):
         send_message(data)
         return "Location message sent"
     @function_tool
-    def send_cta_message(body_text: str, button_text: str, button_url: str, header_type: Literal["image"] = None, header_content: str = None, footer_text: str = None):
-        """Send a CTA message back to the user. Such a message "calls for" action and often advertises something.
+    def send_cta_message(body_text: str, button_text: str, button_url: str, header_type: Literal["text", "image"] = None, header_content: str = None, footer_text: str = None):
+        """Sende eine CTA-Nachricht an den Nutzer. Diese Nachricht "ruft" zu einer Aktion auf und bewirbt oft etwas. Zum Beispiel Blogposts, Kampagnen oder Produkte auf der Belcando-Website.
+        
+        WICHTIG: Nutze nur gültige Belcando URLs wie https://www.belcando.de, https://www.belcando.de/produkte, etc.
+
+        Wenn du einen header_type "image" verwendest, dann verwende diese URL als header_content: https://d23dsm0lnesl7r.cloudfront.net/media/91/3f/77/1713433379/bb-open-graph-image-BELCANDO.jpeg
+        
         Args:
-            body_text: The body text of the message to send to the user.
-            button_text: The text in the button to send to the user.
-            button_url: The URL of the button to send to the user.
-            header_type: The type of the header to send to the user (image).
-            header_content: The content of the header to send to the user.
-            footer_text: The text of the footer to send to the user.
+            body_text: Haupttext der Nachricht
+            button_text: Text auf dem Button (z.B. "Mehr erfahren", "Zur Website")  
+            button_url: Gültige URL zu der der Button führt (nur Belcando URLs!)
+            header_type: Optional header type - nur "text" oder "image" erlaubt
+            header_content: Header-Inhalt (Text oder gültige Bild-URL mit .jpg, .png, etc.)
+            footer_text: Optionaler Footer-Text
         """
         data = create_cta_message(phone_number, body_text, button_text, button_url, header_type, header_content, footer_text)
         send_message(data)
@@ -146,8 +159,8 @@ def create_communication_tools(phone_number: str, message_id: str):
     
     @function_tool
     def send_interactive_questions(body_text: str = "Was kann ich für dich tun? 🐾", button_text: str = "Frage auswählen"):
-        """Send an interactive list of questions/topics the user can choose from.
-        Important: Send ALWAYS in beginning of conversation with a new user! This gives a user the idea of what to ask.
+        """Sende eine interaktive Liste von Fragen/Themen, die der Nutzer auswählen kann.
+        Wichtig: Sende IMMER am Anfang einer Konversation mit einem neuen Nutzer! Dies gibt dem Nutzer einen Eindruck davon, was er fragen kann.
         Args:
             body_text: Text above the questions list (default: "Was kann ich für dich tun? 🐾")
             button_text: Text on the button to open the list (default: "Frage auswählen")
