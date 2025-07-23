@@ -25,3 +25,8 @@ class Tip(BaseModel):
     description: str
     url: str
     cta: str
+
+class Question(BaseModel):
+    id: str
+    title: str
+    description: str

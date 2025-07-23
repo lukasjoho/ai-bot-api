@@ -1,8 +1,8 @@
 import json
 import logging
 import asyncio
+from services.openai.run_agent import run_agent
 from services.whatsapp.utils import is_valid_whatsapp_message, extract_whatsapp_data
-from services.openai.run import run_agents
 from services.whatsapp.api import send_message
 from services.whatsapp.messages import create_text_message
 
@@ -21,7 +21,7 @@ def handle_message(data: dict):
 
 async def handleTextMessage(message: dict, phone_number: str, name: str, message_id: str):
     message_body = message["text"]["body"]
-    await run_agents(message_body, message_id, phone_number, name)
+    await run_agent(message_body, message_id, phone_number, name)
 
 async def handleLocationMessage(message: dict, phone_number: str, name: str, message_id: str):
     location = message["location"]
@@ -39,7 +39,7 @@ async def handleLocationMessage(message: dict, phone_number: str, name: str, mes
     location_parts.append(f"(Lat: {latitude}, Lng: {longitude})")
     
     location_message = f"User shared location: {' '.join(location_parts)}"
-    await run_agents(location_message, message_id, phone_number, name)
+    await run_agent(location_message, message_id, phone_number, name)
 
 async def handleInteractiveMessage(message: dict, phone_number: str, name: str, message_id: str):
     interactive = message["interactive"]
@@ -58,7 +58,7 @@ async def handleInteractiveMessage(message: dict, phone_number: str, name: str, 
         # Unknown interactive type
         interactive_message = "User interacted with message"
     
-    await run_agents(interactive_message, message_id, phone_number, name)
+    await run_agent(interactive_message, message_id, phone_number, name)
 
 async def process_whatsapp_message(data: dict):
     extracted_data = extract_whatsapp_data(data)
