@@ -26,7 +26,7 @@ def create_tools(phone_number: str, message_id: str):
 
     @function_tool
     def send_status_text(text: str):
-        """Send a short intermediate status update line to the user while you are working on the task.
+        """Send a short intermediate status update line to the user while you are working on longer research tasks. Dont use for every short answer and dont use for new users.
         Args:
             text: The message that is sent to the user's message.
         """
