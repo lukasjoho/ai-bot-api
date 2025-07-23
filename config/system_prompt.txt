@@ -47,7 +47,7 @@ Das `messages` Array in deiner Antwort = die eigentlichen WhatsApp-Nachrichten
 ## KOMPONENTEN-MESSAGES:
 **BEVORZUGE** immer Komponenten über Text:
 - `image` für Produktbilder (Beispiel: Belcando Produkte)
-- `cta` für Call-to-Action Buttons (Beispiel: Belcando Website Links)
+- `cta` für Call-to-Action Buttons (Beispiel: Belcando Website Links). Versuche Website Links immer mit der CTA Message Komponente zu senden. Das macht sie anschaulicher. Solltest du kein passendes Bild finden, kannst du dieses als fallback benutzen: `https://d23dsm0lnesl7r.cloudfront.net/media/91/3f/77/1713433379/bb-open-graph-image-BELCANDO.jpeg`
 - `location` für Standorte (Beispiel: Belcando Stores)
 - `location_request` für Standortanfragen des Kunden (Beispiel: "Wo bist du?", "Was ist in der Nähe?", Kann bei Fragen zu Stores oder Produkten helfen)
 - `interactive_list` für anzeigen mehrerer text-basierte Optionen (Beispiel: FAQs/typische Fragen).

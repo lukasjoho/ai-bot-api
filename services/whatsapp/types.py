@@ -111,7 +111,7 @@ class AgentResponse(BaseModel):
     Each message has a specific type and associated data.
     """
     
-    messages: list[Union[TextMessage, ImageMessage, LocationMessage, LocationRequestMessage, InteractiveListMessage]] = Field(
+    messages: list[Union[TextMessage, ImageMessage, LocationMessage, LocationRequestMessage, InteractiveListMessage, CTAMessage]] = Field(
         description="Array of messages to send to the user via WhatsApp. Use various message types for engaging responses.",
         min_items=1,
     )
