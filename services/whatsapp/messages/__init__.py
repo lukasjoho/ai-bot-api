@@ -9,6 +9,7 @@ from .error_message import create_error_message, send_error_message, send_rateli
 from .cta_message import create_cta_message, send_cta_message
 from .interactive_list_message import create_interactive_list_message, send_interactive_list_message
 from .location_request_message import create_location_request_message, send_location_request_message
+from .sticker_message import create_sticker_message, send_sticker_message
 
 __all__ = [
     '_create_base_message',
@@ -31,5 +32,7 @@ __all__ = [
     'create_interactive_list_message',
     'send_interactive_list_message',
     'create_location_request_message',
-    'send_location_request_message'
+    'send_location_request_message',
+    'create_sticker_message',
+    'send_sticker_message'
 ]

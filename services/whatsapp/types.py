@@ -102,6 +102,15 @@ class InteractiveListMessage(BaseModel):
     type: Literal["interactive_list"] = Field(default="interactive_list", description="Message type identifier")
     data: InteractiveListMessageData
 
+# Sticker message
+
+class StickerMessageData(BaseModel):
+    sticker_url: str = Field(description=".webp Media URL of the sticker to send")
+
+class StickerMessage(BaseModel):
+    type: Literal["sticker"] = Field(default="sticker", description="Message type identifier")
+    data: StickerMessageData
+
 # Agent response
 class AgentResponse(BaseModel):
     """
@@ -111,7 +120,7 @@ class AgentResponse(BaseModel):
     Each message has a specific type and associated data.
     """
     
-    messages: list[Union[TextMessage, ImageMessage, LocationMessage, LocationRequestMessage, InteractiveListMessage, CTAMessage]] = Field(
+    messages: list[Union[TextMessage, ImageMessage, LocationMessage, LocationRequestMessage, InteractiveListMessage, CTAMessage, StickerMessage]] = Field(
         description="Array of messages to send to the user via WhatsApp. Use various message types for engaging responses.",
         min_items=1,
     )

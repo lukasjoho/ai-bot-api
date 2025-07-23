@@ -7,6 +7,7 @@ from services.whatsapp.messages import (
     send_cta_message,
     send_location_request_message,
     send_interactive_list_message,
+    send_sticker_message,
 )
 from services.whatsapp.types import (
     ImageMessage,
@@ -15,11 +16,12 @@ from services.whatsapp.types import (
     CTAMessage,
     LocationRequestMessage,
     InteractiveListMessage,
+    StickerMessage,
 )
 
 
 
-def dispatch_message(phone_number: str, message: Union[TextMessage, ImageMessage, LocationMessage, CTAMessage, LocationRequestMessage, InteractiveListMessage]) -> bool:
+def dispatch_message(phone_number: str, message: Union[TextMessage, ImageMessage, LocationMessage, CTAMessage, LocationRequestMessage, InteractiveListMessage, StickerMessage]) -> bool:
     try:
         if message.type == "text":
             send_text_message(phone_number, message.data)
@@ -41,6 +43,9 @@ def dispatch_message(phone_number: str, message: Union[TextMessage, ImageMessage
             return True
         elif message.type == "interactive_list":
             send_interactive_list_message(phone_number, message.data)
+            return True
+        elif message.type == "sticker":
+            send_sticker_message(phone_number, message.data)
             return True
         else:
             print(f"Unsupported message type: {message.type}")
