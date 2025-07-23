@@ -11,6 +11,10 @@ def create_cta_message(phone_number: str, data: CTAMessageData):
         data: CTA message data containing body_text, button_text, button_url, etc.
     """
     message = _create_base_message(phone_number, "interactive")
+    
+    # Truncate button_text to WhatsApp's 20 character limit
+    button_text = str(data.button_text)[:20]
+    
     message["interactive"] = {
         "type": "cta_url",
         "body": {
@@ -19,7 +23,7 @@ def create_cta_message(phone_number: str, data: CTAMessageData):
         "action": {
             "name": "cta_url",
             "parameters": {
-                "display_text": data.button_text,
+                "display_text": button_text,
                 "url": data.button_url
             }
         }
@@ -34,15 +38,14 @@ def create_cta_message(phone_number: str, data: CTAMessageData):
             }
         elif data.header_type == "image":
             OG_IMAGE = "https://d23dsm0lnesl7r.cloudfront.net/media/91/3f/77/1713433379/bb-open-graph-image-BELCANDO.jpeg"
-            imageUrl = OG_IMAGE
+            imageUrl = data.header_content if _is_valid_image_url(data.header_content) else OG_IMAGE
             # Validate image URL
-            if _is_valid_image_url(imageUrl):
-                message["interactive"]["header"] = {
-                    "type": "image",
-                    "image": {
-                        "link": imageUrl
-                    }
+            message["interactive"]["header"] = {
+                "type": "image",
+                "image": {
+                    "link": imageUrl
                 }
+            }
     
     # Add footer if provided
     if data.footer_text:

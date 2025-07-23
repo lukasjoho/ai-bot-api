@@ -66,7 +66,7 @@ class LocationMessage(BaseModel):
 # Location request message
 
 class LocationRequestMessageData(BaseModel):
-    body_text: str = Field(description="Text to display in the location request message")
+    body_text: str = Field(description="Text to display to the user in the location request message, so that the user knows why they are asked for location.")
 
 class LocationRequestMessage(BaseModel):
     type: Literal["location_request"] = Field(default="location_request", description="Message type identifier")
@@ -76,8 +76,11 @@ class LocationRequestMessage(BaseModel):
 
 class CTAMessageData(BaseModel):
     body_text: str = Field(description="Text to display in the CTA message")
-    button_text: str = Field(description="Text for the button")
+    button_text: str = Field(description="Text for the button", max_length=20)
     button_url: str = Field(description="URL to redirect to when the button is clicked")
+    footer_text: str | None = Field(default=None, description="Text to display in the footer of the CTA message")
+    header_type: Literal["text", "image"] = Field(description="Type of header to display in the CTA message")
+    header_content: str = Field(description="Content of the header (text or image URL)")
 
 class CTAMessage(BaseModel):
     type: Literal["cta"] = Field(default="cta", description="Message type identifier")
@@ -85,17 +88,19 @@ class CTAMessage(BaseModel):
 
 # Interactive list message
 
+class InteractiveListItem(BaseModel):
+    title: str = Field(description="Primary heading of the item", max_length=24)
+    description: str = Field(description="Subtext of the item", max_length=72)
+
 class InteractiveListMessageData(BaseModel):
+    header_text: str = Field(description="Title of the entire component displayed to the user")
     body_text: str = Field(description="Text to display in the interactive list message")
-    button_text: str = Field(description="Text for the button")
-    sections: list[dict] = Field(description="List of sections to display in the interactive list message")
+    button_text: str = Field(description="Text for the button. When a user taps the button in the message, it displays a modal that lists the options available.")
+    items: list[InteractiveListItem] = Field(description="List of items to display in the interactive list message", min_items=1)
 
 class InteractiveListMessage(BaseModel):
     type: Literal["interactive_list"] = Field(default="interactive_list", description="Message type identifier")
     data: InteractiveListMessageData
-
-# Interactive list section
-
 
 # Agent response
 class AgentResponse(BaseModel):
@@ -106,7 +111,7 @@ class AgentResponse(BaseModel):
     Each message has a specific type and associated data.
     """
     
-    messages: list[Union[TextMessage, ImageMessage, LocationMessage]] = Field(
+    messages: list[Union[TextMessage, ImageMessage, LocationMessage, LocationRequestMessage, InteractiveListMessage]] = Field(
         description="Array of messages to send to the user via WhatsApp. Use various message types for engaging responses.",
         min_items=1,
     )

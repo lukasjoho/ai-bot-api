@@ -38,7 +38,7 @@ async def handleLocationMessage(message: dict, phone_number: str, name: str, mes
         location_parts.append(f"at {address}")
     location_parts.append(f"(Lat: {latitude}, Lng: {longitude})")
     
-    location_message = f"User shared location: {' '.join(location_parts)}"
+    location_message = f"INTERACTIVE USER RESPONSE: User shared location: {' '.join(location_parts)}"
     await run_agent(location_message, message_id, phone_number, name)
 
 async def handleInteractiveMessage(message: dict, phone_number: str, name: str, message_id: str):
@@ -48,15 +48,16 @@ async def handleInteractiveMessage(message: dict, phone_number: str, name: str, 
         # User selected from a list
         selection_id = interactive["list_reply"]["id"]
         selection_title = interactive["list_reply"]["title"]
-        interactive_message = f"User selected from list: '{selection_title}' (ID: {selection_id})"
+        section_description = interactive["list_reply"]["description"]
+        interactive_message = f"INTERACTIVE USER RESPONSE: User selected from list the item with title '{selection_title}' and description '{section_description}'"
     elif "button_reply" in interactive:
         # User clicked a button
         button_id = interactive["button_reply"]["id"] 
         button_title = interactive["button_reply"]["title"]
-        interactive_message = f"User clicked button: '{button_title}' (ID: {button_id})"
+        interactive_message = f"INTERACTIVE USER RESPONSE: User clicked button: '{button_title}'"
     else:
         # Unknown interactive type
-        interactive_message = "User interacted with message"
+        interactive_message = "INTERACTIVE USER RESPONSE: User interacted with unknown message"
     
     await run_agent(interactive_message, message_id, phone_number, name)
 

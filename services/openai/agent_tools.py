@@ -16,11 +16,11 @@ load_dotenv()
 
 def create_tools(phone_number: str, message_id: str):
     @function_tool
-    def get_belcando_data(data_type: Literal["products", "stores", "tips", "questions"]) -> Union[list[Product], list[Store], list[Tip], list[Question]]:
+    def get_belcando_data(data_type: Literal["products", "stores", "tips"]) -> Union[list[Product], list[Store], list[Tip]]:
         """Get Belcando data from the database.
         
         Args:
-            data_type: Type of data to retrieve - "products", "stores", "tips", or "questions"
+            data_type: Type of data to retrieve - "products", "stores", "tips"
         """
         return get_data(f"{data_type}.json")
 

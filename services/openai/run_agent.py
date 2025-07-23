@@ -23,7 +23,7 @@ async def run_agent(message: str, message_id: str, phone_number: str, name: str 
         # Create tools and agent
         tools = create_tools(phone_number, message_id)
         agent = Agent(name="Assistant", instructions=load_system_prompt(), tools=tools, output_type=AgentResponse)
-        query = f"Antworte auf die Nachricht von {name}. Neuer Nutzer?: {'Ja' if is_new_user else 'Nein'}). Nachricht: {message}. "
+        query = f"Antworte auf die Nachricht von {name}. (Neuer Nutzer?: {'Ja' if is_new_user else 'Nein'}). Nachricht: {message}."
         
         with trace("Gregor - WhatsApp Agent"):
             result = Runner.run_streamed(agent, query, previous_response_id=previous_response_id)
@@ -37,6 +37,14 @@ async def run_agent(message: str, message_id: str, phone_number: str, name: str 
         
     except openai.RateLimitError as e:
         send_ratelimit_message(phone_number)
+        raise e
+    
+    except openai.APIError as e:
+        # Check if it's a rate limit error by examining the error message
+        if "rate limit" in str(e).lower() or "tpm" in str(e).lower():
+            send_ratelimit_message(phone_number)
+        else:
+            send_exception_message(phone_number)
         raise e
     
     except Exception as e:

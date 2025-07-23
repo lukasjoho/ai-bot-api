@@ -4,16 +4,22 @@ from services.whatsapp.messages import (
     send_text_message, 
     send_image_message, 
     send_location_message,
+    send_cta_message,
+    send_location_request_message,
+    send_interactive_list_message,
 )
 from services.whatsapp.types import (
     ImageMessage,
     TextMessage,
     LocationMessage,
+    CTAMessage,
+    LocationRequestMessage,
+    InteractiveListMessage,
 )
 
 
 
-def dispatch_message(phone_number: str, message: Union[TextMessage, ImageMessage, LocationMessage]) -> bool:
+def dispatch_message(phone_number: str, message: Union[TextMessage, ImageMessage, LocationMessage, CTAMessage, LocationRequestMessage, InteractiveListMessage]) -> bool:
     try:
         if message.type == "text":
             send_text_message(phone_number, message.data)
@@ -26,7 +32,16 @@ def dispatch_message(phone_number: str, message: Union[TextMessage, ImageMessage
         elif message.type == "location":
             send_location_message(phone_number, message.data)
             return True
-        
+
+        elif message.type == "cta":
+            send_cta_message(phone_number, message.data)
+            return True
+        elif message.type == "location_request":
+            send_location_request_message(phone_number, message.data)
+            return True
+        elif message.type == "interactive_list":
+            send_interactive_list_message(phone_number, message.data)
+            return True
         else:
             print(f"Unsupported message type: {message.type}")
             return False
