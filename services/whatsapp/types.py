@@ -95,7 +95,7 @@ class InteractiveListItem(BaseModel):
 class InteractiveListMessageData(BaseModel):
     header_text: str = Field(description="Title of the entire component displayed to the user")
     body_text: str = Field(description="Text to display in the interactive list message")
-    button_text: str = Field(description="Text for the button. When a user taps the button in the message, it displays a modal that lists the options available.")
+    button_text: str = Field(description="Text for the button. When a user taps the button in the message, it displays a modal that lists the options available.", max_length=20)
     items: list[InteractiveListItem] = Field(description="List of items to display in the interactive list message", min_items=1)
 
 class InteractiveListMessage(BaseModel):
