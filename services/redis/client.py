@@ -41,9 +41,9 @@ class UpstashRedisClient:
         command = ["GET", key]
         return await self._execute_command(command)
     
-    async def set(self, key: str, value: str) -> str:
+    async def set(self, key: str, value: str, ex: int) -> str:
         """Set the value of a key"""
-        command = ["SET", key, value]
+        command = ["SET", key, value, "EX", ex]
         return await self._execute_command(command)
 
 # Global client instance

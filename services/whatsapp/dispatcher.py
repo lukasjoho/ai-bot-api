@@ -25,16 +25,13 @@ def dispatch_message(phone_number: str, message: Union[TextMessage, ImageMessage
     try:
         if message.type == "text":
             send_text_message(phone_number, message.data)
-            return True
-            
+            return True     
         elif message.type == "image":
             send_image_message(phone_number, message.data)
-            return True
-        
+            return True 
         elif message.type == "location":
             send_location_message(phone_number, message.data)
             return True
-
         elif message.type == "cta":
             send_cta_message(phone_number, message.data)
             return True

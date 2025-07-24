@@ -22,8 +22,8 @@ async def run_agent(message: str, message_id: str, phone_number: str, name: str 
         
         # Create tools and agent
         tools = create_tools(phone_number, message_id)
-        agent = Agent(name="Assistant", instructions=load_system_prompt(), tools=tools, output_type=AgentResponse)
-        query = f"Antworte auf die Nachricht von {name}. (Neuer Nutzer?: {'Ja' if is_new_user else 'Nein'}). Nachricht: {message}."
+        agent = Agent(name="Assistant", instructions=load_system_prompt(name=name, is_new_user=is_new_user), tools=tools, output_type=AgentResponse)
+        query = message
         
         with trace("Gregor - WhatsApp Agent"):
             result = Runner.run_streamed(agent, query, previous_response_id=previous_response_id)

@@ -7,4 +7,4 @@ async def get_previous_response_id(phone_number: str) -> str | None:
 
 async def save_response_id(phone_number: str, response_id: str) -> None:
     key = f"response_id:{phone_number}"
-    await redis_client.set(key, response_id)
+    await redis_client.set(key, response_id, ex=1800)

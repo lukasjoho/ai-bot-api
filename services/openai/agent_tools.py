@@ -10,7 +10,8 @@ from services.whatsapp.messages.text_message import send_text_message
 import os
 from dotenv import load_dotenv
 
-from services.whatsapp.types import ReactionMessageData, TextMessageData
+from services.whatsapp.messages.typing_message import send_typing_indicator
+from services.whatsapp.types import ReactionMessageData, TextMessageData, TypingMessageData
 
 load_dotenv()
 
@@ -26,14 +27,14 @@ def create_tools(phone_number: str, message_id: str):
 
     @function_tool
     def send_status_text(text: str):
-        """Send a short intermediate status update line to the user while you are working on longer research tasks. Dont use for every short answer and dont use for new users.
+        """Send a short intermediate status update line to the user while you are working on longer research tasks.
         Args:
             text: The message that is sent to the user's message.
         """
         print(f"Sending status text: {text}")
         data = TextMessageData(text=text)
         send_text_message(phone_number, data)
-        return "System: Status sent"
+        return "TOOL RESPONSE: Status sent"
 
     @function_tool
     def send_reaction(emoji: str):
@@ -43,7 +44,17 @@ def create_tools(phone_number: str, message_id: str):
         """
         reaction_data = ReactionMessageData(message_id=message_id, emoji=emoji)
         send_reaction_message(phone_number, reaction_data)
-        return "System: Emoji sent"
+        return "TOOL RESPONSE: Emoji sent"
+
+    @function_tool
+    def send_typing(message_id: str):
+        """Send a typing indicator to the user's message. (Only use this if you are working on a longer task. You can do this greatly after retrievla operations and before sending the final result to let the user know you are about to send the final result.)
+        Args:
+            message_id: The ID of the message to send the typing indicator for
+        """
+        typing_data = TypingMessageData(message_id=message_id)
+        send_typing_indicator(typing_data)
+        return "TOOL RESPONSE: Typing indicator sent"
 
 
     knowledge_tools = [get_belcando_data]
