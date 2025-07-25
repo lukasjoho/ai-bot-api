@@ -22,7 +22,7 @@ async def run_agent(message: str, message_id: str, phone_number: str, name: str 
         
         # Create tools and agent
         tools = create_tools(phone_number, message_id)
-        agent = Agent(name="Assistant", instructions=load_system_prompt(name=name, is_new_user=is_new_user), tools=tools, output_type=AgentResponse)
+        agent = Agent(name="Assistant", instructions=load_system_prompt(name=name, is_new_user=is_new_user), tools=tools, output_type=AgentResponse, model="gpt-4.1")
         query = message
         
         with trace("Gregor - WhatsApp Agent"):
